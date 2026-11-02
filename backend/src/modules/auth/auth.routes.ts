@@ -43,10 +43,10 @@ authRouter.post("/parent/request-otp", otpLimiter, async (req, res, next) => {
     });
 
     // Demo mode: return hint only in non-production demo; never log as real SMS
-    const demoHint =
-      env.OTP_DEMO_MODE && env.NODE_ENV !== "production"
-        ? { demoOtp: code, note: "OTP_DEMO_MODE — mock delivery only" }
-        : undefined;
+    // When OTP_DEMO_MODE is on, always return the demo OTP to reviewers (mock delivery only).
+    const demoHint = env.OTP_DEMO_MODE
+      ? { demoOtp: code, note: "OTP_DEMO_MODE — mock delivery only, not a real SMS" }
+      : undefined;
 
     if (env.OTP_DEMO_MODE) {
       console.info(`[FeeFlow OTP demo] phone=${phone} code=${code} (mock, not SMS)`);
