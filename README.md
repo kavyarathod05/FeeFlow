@@ -1,5 +1,10 @@
 # FeeFlow
 
+**Repository:** https://github.com/kavyarathod05/FeeFlow
+
+**Temporary live frontend:** https://flying-oasis-xa3jswq.tmp.now (claim within ~60m)
+
+
 Coaching institute fee tracking system and parent portal (MVP).
 
 Multi-centre dues visibility, OTP parent portal, mock payment links with idempotent allocation, automated Hindi/English reminders that cancel on payment, illustrative pro-rata refunds, explainable dropout-risk counsellor tasks, and Tally-oriented CSV export.
