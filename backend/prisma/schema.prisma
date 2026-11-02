@@ -1,0 +1,528 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  PARENT
+  ACCOUNTS
+}
+
+enum InstalmentStatus {
+  UPCOMING
+  DUE
+  PARTIALLY_PAID
+  PAID
+  OVERDUE
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELLED
+  TIMEOUT
+  UNMATCHED
+}
+
+enum ReminderStage {
+  BEFORE_DUE
+  ON_DUE
+  AFTER_DUE
+}
+
+enum ReminderDeliveryStatus {
+  SCHEDULED
+  SENT
+  FAILED
+  CANCELLED
+  SKIPPED
+}
+
+enum Language {
+  EN
+  HI
+}
+
+enum RiskCategory {
+  HIGH
+  MEDIUM
+  LOW
+  INSUFFICIENT_DATA
+}
+
+enum CounsellorTaskStatus {
+  OPEN
+  IN_PROGRESS
+  CLOSED
+  FALSE_POSITIVE
+}
+
+enum RefundRequestStatus {
+  CALCULATED
+  PENDING_REVIEW
+  APPROVED
+  REJECTED
+  PROCESSED
+}
+
+enum ConsentStatus {
+  NOT_GIVEN
+  GIVEN
+  WITHDRAWN
+}
+
+enum ReconciliationStatus {
+  MATCHED
+  UNMATCHED
+  DUPLICATE
+  FAILED
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String?   @unique
+  phone        String?   @unique
+  passwordHash String?
+  role         UserRole
+  name         String
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+  parent       Parent?
+  otps         OtpCode[]
+  auditLogs    AuditLog[]
+}
+
+model OtpCode {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  phone     String
+  codeHash  String
+  expiresAt DateTime
+  consumed  Boolean  @default(false)
+  attempts  Int      @default(0)
+  createdAt DateTime @default(now())
+
+  @@index([phone, createdAt])
+}
+
+model Parent {
+  id        String            @id @default(cuid())
+  userId    String            @unique
+  user      User              @relation(fields: [userId], references: [id])
+  phone     String            @unique
+  language  Language          @default(HI)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+  students  ParentStudent[]
+  consents  ParentalConsent[]
+}
+
+model Centre {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  name      String
+  city      String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  batches   Batch[]
+  students  Student[]
+}
+
+model Batch {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  name      String
+  centreId  String
+  centre    Centre    @relation(fields: [centreId], references: [id])
+  stream    String
+  year      Int
+  shift     String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+  students  Student[]
+  tests     Test[]
+}
+
+model Student {
+  id              String             @id @default(cuid())
+  studentCode     String             @unique
+  name            String
+  centreId        String
+  centre          Centre             @relation(fields: [centreId], references: [id])
+  batchId         String
+  batch           Batch              @relation(fields: [batchId], references: [id])
+  courseStartDate DateTime
+  courseEndDate   DateTime
+  isMinor         Boolean            @default(true)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  deletedAt       DateTime?
+  parents         ParentStudent[]
+  feePlans        FeePlan[]
+  attendance      AttendanceRecord[]
+  testScores      TestScore[]
+  riskAssessments RiskAssessment[]
+  counsellorTasks CounsellorTask[]
+  consents        ParentalConsent[]
+  refundRequests  RefundRequest[]
+
+  @@index([centreId, batchId])
+  @@index([name])
+}
+
+model ParentStudent {
+  id        String   @id @default(cuid())
+  parentId  String
+  parent    Parent   @relation(fields: [parentId], references: [id])
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id])
+  relation  String   @default("guardian")
+  createdAt DateTime @default(now())
+
+  @@unique([parentId, studentId])
+}
+
+model FeePlan {
+  id             String       @id @default(cuid())
+  studentId      String
+  student        Student      @relation(fields: [studentId], references: [id])
+  name           String
+  baseFee        Decimal      @db.Decimal(12, 2)
+  netFee         Decimal      @db.Decimal(12, 2)
+  instalmentCount Int
+  isActive       Boolean      @default(true)
+  activatedAt    DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  discounts      Discount[]
+  instalments    Instalment[]
+
+  @@index([studentId, isActive])
+}
+
+model Discount {
+  id          String   @id @default(cuid())
+  feePlanId   String
+  feePlan     FeePlan  @relation(fields: [feePlanId], references: [id])
+  label       String
+  amount      Decimal  @db.Decimal(12, 2)
+  approvedBy  String?
+  approvedAt  DateTime?
+  createdAt   DateTime @default(now())
+}
+
+model Instalment {
+  id              String           @id @default(cuid())
+  feePlanId       String
+  feePlan         FeePlan          @relation(fields: [feePlanId], references: [id])
+  sequence        Int
+  dueDate         DateTime
+  amount          Decimal          @db.Decimal(12, 2)
+  amountPaid      Decimal          @default(0) @db.Decimal(12, 2)
+  status          InstalmentStatus @default(UPCOMING)
+  briefSnapshotNote String?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  allocations     PaymentAllocation[]
+  paymentLinks    PaymentLink[]
+  reminders       Reminder[]
+  receipts        Receipt[]
+
+  @@unique([feePlanId, sequence])
+  @@index([dueDate, status])
+}
+
+model Payment {
+  id                String              @id @default(cuid())
+  amount            Decimal             @db.Decimal(12, 2)
+  currency          String              @default("INR")
+  status            PaymentStatus       @default(PENDING)
+  gatewayRef        String?             @unique
+  idempotencyKey    String?             @unique
+  method            String?
+  paidAt            DateTime?
+  failureReason     String?
+  metadata          Json?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  allocations       PaymentAllocation[]
+  paymentLinks      PaymentLink[]
+  receipts          Receipt[]
+  unmatched         UnmatchedPayment?
+  reconciliationStatus ReconciliationStatus?
+
+  @@index([status, createdAt])
+}
+
+model PaymentAllocation {
+  id           String     @id @default(cuid())
+  paymentId    String
+  payment      Payment    @relation(fields: [paymentId], references: [id])
+  instalmentId String
+  instalment   Instalment @relation(fields: [instalmentId], references: [id])
+  amount       Decimal    @db.Decimal(12, 2)
+  createdAt    DateTime   @default(now())
+
+  @@unique([paymentId, instalmentId])
+  @@index([instalmentId])
+}
+
+model PaymentLink {
+  id           String     @id @default(cuid())
+  token        String     @unique @default(cuid())
+  instalmentId String
+  instalment   Instalment @relation(fields: [instalmentId], references: [id])
+  amount       Decimal    @db.Decimal(12, 2)
+  expiresAt    DateTime
+  usedAt       DateTime?
+  paymentId    String?
+  payment      Payment?   @relation(fields: [paymentId], references: [id])
+  createdAt    DateTime   @default(now())
+
+  @@index([instalmentId])
+}
+
+model Receipt {
+  id           String     @id @default(cuid())
+  receiptNo    String     @unique
+  paymentId    String
+  payment      Payment    @relation(fields: [paymentId], references: [id])
+  instalmentId String
+  instalment   Instalment @relation(fields: [instalmentId], references: [id])
+  studentCode  String
+  studentName  String
+  taxableAmount Decimal   @db.Decimal(12, 2)
+  cgst         Decimal    @db.Decimal(12, 2)
+  sgst         Decimal    @db.Decimal(12, 2)
+  totalAmount  Decimal    @db.Decimal(12, 2)
+  issuedAt     DateTime   @default(now())
+  createdAt    DateTime   @default(now())
+}
+
+model ReminderTemplate {
+  id        String         @id @default(cuid())
+  stage     ReminderStage
+  language  Language
+  channel   String
+  subject   String?
+  body      String
+  isActive  Boolean        @default(true)
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  reminders Reminder[]
+
+  @@unique([stage, language, channel])
+}
+
+model Reminder {
+  id              String                  @id @default(cuid())
+  instalmentId    String
+  instalment      Instalment              @relation(fields: [instalmentId], references: [id])
+  templateId      String
+  template        ReminderTemplate        @relation(fields: [templateId], references: [id])
+  stage           ReminderStage
+  language        Language
+  channel         String
+  scheduledFor    DateTime
+  outstandingAmount Decimal               @db.Decimal(12, 2)
+  messagePreview  String
+  deliveryStatus  ReminderDeliveryStatus  @default(SCHEDULED)
+  sentAt          DateTime?
+  cancelledAt     DateTime?
+  cancelReason    String?
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+
+  @@unique([instalmentId, stage, channel, scheduledFor])
+  @@index([deliveryStatus, scheduledFor])
+}
+
+model RefundPolicy {
+  id                    String          @id @default(cuid())
+  version               String          @unique
+  name                  String
+  formulaDescription    String
+  processingDays        Int             @default(10)
+  nonRefundableAmount   Decimal         @default(0) @db.Decimal(12, 2)
+  isIllustrative        Boolean         @default(true)
+  isActive              Boolean         @default(true)
+  createdAt             DateTime        @default(now())
+  refundRequests        RefundRequest[]
+}
+
+model RefundRequest {
+  id                    String              @id @default(cuid())
+  studentId             String
+  student               Student             @relation(fields: [studentId], references: [id])
+  policyId              String
+  policy                RefundPolicy        @relation(fields: [policyId], references: [id])
+  withdrawalDate        DateTime
+  courseStartDate       DateTime
+  courseEndDate         DateTime
+  baseFee               Decimal             @db.Decimal(12, 2)
+  discountTotal         Decimal             @db.Decimal(12, 2)
+  eligibleNetFee        Decimal             @db.Decimal(12, 2)
+  totalPaid             Decimal             @db.Decimal(12, 2)
+  previouslyRefunded    Decimal             @db.Decimal(12, 2)
+  totalDays             Int
+  completedDays         Int
+  remainingDays         Int
+  calculatedRefund      Decimal             @db.Decimal(12, 2)
+  calculationVersion    String
+  calculationSnapshot   Json
+  status                RefundRequestStatus @default(CALCULATED)
+  processingDeadline    DateTime
+  reviewedBy            String?
+  reviewedAt            DateTime?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+
+  @@index([studentId, status])
+}
+
+model AttendanceRecord {
+  id          String   @id @default(cuid())
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id])
+  date        DateTime
+  present     Boolean
+  createdAt   DateTime @default(now())
+
+  @@unique([studentId, date])
+  @@index([studentId, date])
+}
+
+model Test {
+  id        String      @id @default(cuid())
+  batchId   String
+  batch     Batch       @relation(fields: [batchId], references: [id])
+  name      String
+  heldOn    DateTime
+  maxScore  Int
+  createdAt DateTime    @default(now())
+  scores    TestScore[]
+}
+
+model TestScore {
+  id        String   @id @default(cuid())
+  testId    String
+  test      Test     @relation(fields: [testId], references: [id])
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id])
+  score     Int
+  createdAt DateTime @default(now())
+
+  @@unique([testId, studentId])
+}
+
+model RiskAssessment {
+  id              String           @id @default(cuid())
+  studentId       String
+  student         Student          @relation(fields: [studentId], references: [id])
+  category        RiskCategory
+  score           Int?
+  factors         Json
+  explanation     String
+  inputs          Json
+  assessedAt      DateTime         @default(now())
+  createdAt       DateTime         @default(now())
+  counsellorTasks CounsellorTask[]
+
+  @@index([studentId, assessedAt])
+  @@index([category])
+}
+
+model CounsellorTask {
+  id                String               @id @default(cuid())
+  studentId         String
+  student           Student              @relation(fields: [studentId], references: [id])
+  riskAssessmentId  String
+  riskAssessment    RiskAssessment       @relation(fields: [riskAssessmentId], references: [id])
+  title             String
+  notes             String?
+  status            CounsellorTaskStatus @default(OPEN)
+  falsePositiveNote String?
+  closedAt          DateTime?
+  createdAt         DateTime             @default(now())
+  updatedAt         DateTime             @updatedAt
+
+  @@index([status])
+}
+
+model ParentalConsent {
+  id            String        @id @default(cuid())
+  parentId      String
+  parent        Parent        @relation(fields: [parentId], references: [id])
+  studentId     String
+  student       Student       @relation(fields: [studentId], references: [id])
+  status        ConsentStatus @default(NOT_GIVEN)
+  version       String
+  method        String?
+  consentedAt   DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@unique([parentId, studentId, version])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  action     String
+  entityType String
+  entityId   String?
+  metadata   Json?
+  ip         String?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+model UnmatchedPayment {
+  id            String   @id @default(cuid())
+  paymentId     String   @unique
+  payment       Payment  @relation(fields: [paymentId], references: [id])
+  gatewayRef    String?
+  amount        Decimal  @db.Decimal(12, 2)
+  reason        String
+  resolved      Boolean  @default(false)
+  resolvedAt    DateTime?
+  resolvedBy    String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model IdempotencyRecord {
+  id           String   @id @default(cuid())
+  key          String   @unique
+  requestHash  String
+  responseBody Json
+  statusCode   Int
+  createdAt    DateTime @default(now())
+  expiresAt    DateTime
+
+  @@index([expiresAt])
+}
+
+model ReminderConfig {
+  id                 String   @id @default(cuid())
+  beforeDueDays      Int[]    @default([3])
+  onDueEnabled       Boolean  @default(true)
+  afterDueDays       Int[]    @default([3, 7, 15])
+  sendHourIst        Int      @default(9)
+  timezone           String   @default("Asia/Kolkata")
+  updatedAt          DateTime @updatedAt
+  createdAt          DateTime @default(now())
+}
