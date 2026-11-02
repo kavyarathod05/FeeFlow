@@ -1,5 +1,13 @@
 # FeeFlow — Deployment & local run
 
+**GitHub:** https://github.com/kavyarathod05/FeeFlow
+
+**Temporary frontend (claim to keep):** https://flying-oasis-xa3jswq.tmp.now  
+**Claim URL:** https://vercel.com/claim-deployment?code=4f48ab62-6b2b-4e85-9b00-f100ac61d8f0  
+
+**Backend (Render Blueprint):** https://dashboard.render.com/blueprint/new?repo=https://github.com/kavyarathod05/FeeFlow  
+After API is live, set frontend `VITE_API_BASE_URL` to the Render URL and re-deploy/claim the frontend. Run `npm run seed` once on the API service.
+
 ## Prerequisites
 
 - Node.js 20+

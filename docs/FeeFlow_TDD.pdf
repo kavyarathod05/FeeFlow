@@ -9,7 +9,7 @@ endobj
 << /Type /Font /Subtype /Type1 /BaseFont /Courier >>
 endobj
 4 0 obj
-<< /Length 3049 >>
+<< /Length 3281 >>
 stream
 BT
 /F1 9 Tf
@@ -17,8 +17,13 @@ BT
 11 TL
 (# FeeFlow ? Technical Design Document) Tj T*
 ( ) Tj T*
-(**GitHub URL:** _\(add public repository URL here after push\)_  ) Tj T*
-(**Live app:** _\(add frontend URL after deploy\)_ · API health: `GET /health`) Tj T*
+(**GitHub URL:** https://github.com/kavyarathod05/FeeFlow  ) Tj T*
+(**Live app \(temporary Vercel claim\):** https://flying-oasis-xa3jswq.tmp.now  ) Tj T*
+(**Claim/keep frontend:** https://vercel.com/claim-deployment?code=4f48ab62-6b2b-4e85-9b00-f100ac61d8f0  ) Tj T*
+(**Backend deploy:** use Render Blueprint from repo `render.yaml` ? https://dashboard.render.com/blueprint/new?) Tj T*
+(API health \(after backend deploy\): `GET /health`) Tj T*
+( ) Tj T*
+(**ASSUMPTION:** Temporary frontend expires ~60 minutes unless claimed; point `VITE_API_BASE_URL` at the Render) Tj T*
 ( ) Tj T*
 (---) Tj T*
 ( ) Tj T*
@@ -80,11 +85,6 @@ BT
 (Deterministic weighted score from missed instalments, attendance drop, test decline \(ASSUMPTION A7\). Creates) Tj T*
 ( ) Tj T*
 (## 14. API architecture) Tj T*
-( ) Tj T*
-(REST under `/api/*` ? auth, students/ledger, instalments/payment-link, payments \(checkout/webhook\), refunds,) Tj T*
-( ) Tj T*
-(## 15. Security & privacy) Tj T*
-( ) Tj T*
 ET
 endstream
 endobj
@@ -92,19 +92,24 @@ endobj
 << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 3 0 R >> >> >>
 endobj
 6 0 obj
-<< /Length 1928 >>
+<< /Length 2111 >>
 stream
 BT
 /F1 9 Tf
 50 800 Td
 11 TL
+( ) Tj T*
+(REST under `/api/*` ? auth, students/ledger, instalments/payment-link, payments \(checkout/webhook\), refunds,) Tj T*
+( ) Tj T*
+(## 15. Security & privacy) Tj T*
+( ) Tj T*
 (Zod validation, RBAC, hashed OTP/passwords, webhook HMAC, idempotency keys, audit logs, CORS, rate limits, no ) Tj T*
 ( ) Tj T*
 (## 16. UI / design decisions) Tj T*
 ( ) Tj T*
 (Restrained navy/indigo, IBM Plex Sans + Source Serif 4 for amounts. Accounts: sidebar + tables. Parent: mobile) Tj T*
 ( ) Tj T*
-(**Figma:** MCP unavailable during build ? design system tokens mirrored in CSS \(`frontend/src/index.css`\). F) Tj T*
+(**Figma:** MCP unavailable during build. Design system + 8 screens captured in `docs/figma-design-system.html`) Tj T*
 ( ) Tj T*
 (## 17. Testing) Tj T*
 ( ) Tj T*
@@ -149,11 +154,11 @@ xref
 0000000058 00000 n 
 0000000121 00000 n 
 0000000189 00000 n 
-0000003290 00000 n 
-0000003416 00000 n 
-0000005396 00000 n 
+0000003522 00000 n 
+0000003648 00000 n 
+0000005811 00000 n 
 trailer
 << /Size 8 /Root 1 0 R >>
 startxref
-5522
+5937
 %%EOF

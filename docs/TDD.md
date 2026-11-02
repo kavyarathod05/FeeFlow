@@ -1,7 +1,12 @@
 # FeeFlow — Technical Design Document
 
-**GitHub URL:** _(add public repository URL here after push)_  
-**Live app:** _(add frontend URL after deploy)_ · API health: `GET /health`
+**GitHub URL:** https://github.com/kavyarathod05/FeeFlow  
+**Live app (temporary Vercel claim):** https://flying-oasis-xa3jswq.tmp.now  
+**Claim/keep frontend:** https://vercel.com/claim-deployment?code=4f48ab62-6b2b-4e85-9b00-f100ac61d8f0  
+**Backend deploy:** use Render Blueprint from repo `render.yaml` → https://dashboard.render.com/blueprint/new?repo=https://github.com/kavyarathod05/FeeFlow  
+API health (after backend deploy): `GET /health`
+
+**ASSUMPTION:** Temporary frontend expires ~60 minutes unless claimed; point `VITE_API_BASE_URL` at the Render API URL after provisioning Postgres + seed.
 
 ---
 
@@ -74,7 +79,7 @@ Zod validation, RBAC, hashed OTP/passwords, webhook HMAC, idempotency keys, audi
 
 Restrained navy/indigo, IBM Plex Sans + Source Serif 4 for amounts. Accounts: sidebar + tables. Parent: mobile-first 5-second dues (amount, next due, Pay). Loading/empty/error states. Hindi/English toggle.
 
-**Figma:** MCP unavailable during build — design system tokens mirrored in CSS (`frontend/src/index.css`). Figma file to be created when MCP reconnects.
+**Figma:** MCP unavailable during build. Design system + 8 screens captured in `docs/figma-design-system.html` and `docs/figma-screens.html` (importable to Figma). Tokens live in `frontend/src/index.css`.
 
 ## 17. Testing
 
