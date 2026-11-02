@@ -1,0 +1,161 @@
+%PDF-1.4
+1 0 obj<< /Type /Catalog /Pages 2 0 R >>endobj
+2 0 obj<< /Type /Pages /Kids [3 0 R 5 0 R 7 0 R] /Count 3 >>endobj
+3 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 9 0 R >> >> >>endobj
+4 0 obj<< /Length 1966 >>stream
+BT /F1 9 Tf 40 800 Td 12 TL
+(# FeeFlow ? Technical Design Document) '
+() '
+(**GitHub URL:** https://github.com/kavyarathod05/FeeFlow  ) '
+(**Live frontend:** https://frontend-beta-two-a4xpte0563.vercel.app  ) '
+(**Live API:** https://feeflow-api-rppm.onrender.com  ) '
+(**API health:** `GET https://feeflow-api-rppm.onrender.com/health`) '
+() '
+(**ASSUMPTION:** Free Render web services sleep after ~15 minutes of inactivity; the first reque) '
+() '
+(---) '
+() '
+(## 1. Executive summary) '
+() '
+(FeeFlow is an MVP SaaS for Company A \(Jaipur coaching\) that gives parents a clear dues view wit) '
+() '
+(## 2. Original business problem) '
+() '
+(Desktop fee software + Excel due dates + phone chasing. Estimated leakage: late follow-up \(~?62) '
+() '
+(## 3. Business impact calculations) '
+() '
+(From the brief \(preserved\): 2,600 × ?1.2L = ?31.2Cr billed; 2% uncollected ? ?62.4L; staff chas) '
+() '
+(## 4. Product scope) '
+() '
+(**In MVP:** fee ledger, parent OTP portal, mock pay + receipt, reminder cancel-on-pay, refund c) '
+(**Roles:** Parent, Accounts Executive.  ) '
+(**Out of scope:** LMS, timetables, admissions CRM.) '
+() '
+(## 5. Architecture) '
+() '
+(React SPA ? Express domain modules ? PostgreSQL \(Prisma\). In-process cron for mock reminder dis) '
+() '
+(## 6. Technology choices) '
+() '
+(Chosen for typed financial correctness \(Decimal\), fast MVP UI, Render/Vercel deployability, and) '
+() '
+(## 7. Database / ER) '
+() '
+(26+ relational models including FeePlan, Instalment, Payment, PaymentAllocation, Reminder, Refu) '
+() '
+(## 8. Authentication & permissions) '
+() '
+(- Parent: OTP \(hashed, expiry, rate limit\); JWT with `parentId`; student access via `ParentStud) '
+(- Accounts: email/password \(bcrypt\) + JWT; dashboard/refund/risk/recon restricted.) '
+(- Parent ? accounts endpoints ? 403.) '
+() '
+(## 9. Fee & instalment logic) '
+() '
+(`netFee = base ? discounts`. Outstanding from successful allocations only. Instalment sum must ) '
+ET
+endstream
+endobj
+5 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 6 0 R /Resources << /Font << /F1 9 0 R >> >> >>endobj
+6 0 obj<< /Length 1860 >>stream
+BT /F1 9 Tf 40 800 Td 12 TL
+() '
+(## 10. Payment lifecycle) '
+() '
+(Link ? mock checkout session ? gateway result ? signed webhook ? transactional allocation ? rec) '
+() '
+(## 11. Reminder automation) '
+() '
+(Configurable T?3 / T0 / T+3/+7/+15 \(ASSUMPTION A3\). HI/EN templates. Respect consent. Partial: ) '
+() '
+(## 12. Refund calculation & assumptions) '
+() '
+(**ASSUMPTION A1 \(labelled in UI\):**  ) '
+(`eligibleNetFee × remainingDays / totalDays`, capped at `paid ? alreadyRefunded`. Versioned pol) '
+() '
+(## 13. AI risk scoring) '
+() '
+(Deterministic weighted score from missed instalments, attendance drop, test decline \(ASSUMPTION) '
+() '
+(## 14. API architecture) '
+() '
+(REST under `/api/*` ? auth, students/ledger, instalments/payment-link, payments \(checkout/webho) '
+() '
+(Key auth paths:) '
+(- `POST /api/auth/parent/request-otp`) '
+(- `POST /api/auth/parent/verify-otp`) '
+(- `POST /api/auth/accounts/login`) '
+() '
+(## 15. Security & privacy) '
+() '
+(Zod validation, RBAC, hashed OTP/passwords, webhook HMAC, idempotency keys, audit logs, CORS, r) '
+() '
+(## 16. UI / design decisions) '
+() '
+(Restrained navy/indigo, IBM Plex Sans + Source Serif 4 for amounts. Accounts: sidebar + tables.) '
+() '
+(**Figma:** MCP unavailable during build. Design system + 8 screens captured in `docs/figma-desi) '
+() '
+(## 17. Testing) '
+() '
+(Vitest: fee, refund, risk, reminder amount rules \(18 passing\). API smoke verified: pay ? receip) '
+() '
+(## 18. Deployment) '
+() '
+(| Layer | Host | URL |) '
+(|-------|------|-----|) '
+(| Frontend | Vercel | https://frontend-beta-two-a4xpte0563.vercel.app |) '
+(| API | Render \(free web\) | https://feeflow-api-rppm.onrender.com |) '
+(| Database | Render Postgres \(free\) | private `DATABASE_URL` |) '
+() '
+(See `deployment.md`. Server binds `0.0.0.0:$PORT`. Empty DB auto-seeds when `AUTO_SEED=true`.) '
+ET
+endstream
+endobj
+7 0 obj<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 8 0 R /Resources << /Font << /F1 9 0 R >> >> >>endobj
+8 0 obj<< /Length 1075 >>stream
+BT /F1 9 Tf 40 800 Td 12 TL
+() '
+(## 19. Assumptions register) '
+() '
+(| ID | Type | Statement |) '
+(|----|------|-----------|) '
+(| A1 | Business-policy | Illustrative refund formula |) '
+(| A2 | Implementation | Eligible net = base ? discounts \(? optional non-refundable\) |) '
+(| A3 | Implementation | Reminder day offsets configurable defaults |) '
+(| A4 | Technical | Asia/Kolkata date policy |) '
+(| A5 | Implementation | Parent pays specific instalment \(not cross-instalment waterfall\) |) '
+(| A6 | Business-policy | 18% GST illustrative on receipts |) '
+(| A7 | Technical | Deterministic risk heuristic ? ML |) '
+(| A8 | Technical | OTP demo mode |) '
+(| A9 | Future/legal | Demo consent ? production DPDP |) '
+(| A10 | Data | Brief snapshots preserved alongside live recalculation |) '
+() '
+(## 20. Intentionally cut) '
+() '
+(Bulk CSV upload UI, Redis/BullMQ, real SMS/WhatsApp/Razorpay, multi-approver refund workflow, s) '
+() '
+(## 21. Future roadmap) '
+() '
+(Real gateway + messaging, legally reviewed refund policy pack, verifiable parental consent, tra) '
+ET
+endstream
+endobj
+9 0 obj<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>endobj
+xref
+0 10
+0000000000 65535 f 
+0000000009 00000 n 
+0000000056 00000 n 
+0000000123 00000 n 
+0000000247 00000 n 
+0000002263 00000 n 
+0000002387 00000 n 
+0000004297 00000 n 
+0000004421 00000 n 
+0000005546 00000 n 
+trailer<< /Size 10 /Root 1 0 R >>
+startxref
+5614
+%%EOF

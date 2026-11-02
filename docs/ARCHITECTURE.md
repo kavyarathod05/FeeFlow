@@ -32,7 +32,7 @@ Roles (MVP): **Parent**, **Accounts Executive**.
 - In-process scheduler (node-cron) for MVP reminders — Redis/BullMQ optional later.
 - Mock payment + messaging adapters keep demo runnable without third-party accounts.
 
-**Deploy target:** Frontend → Vercel; Backend + Postgres → Render; bind `0.0.0.0:$PORT`.
+**Deploy target:** Frontend → Vercel (`https://frontend-beta-two-a4xpte0563.vercel.app`); Backend + Postgres → Render (`https://feeflow-api-rppm.onrender.com`); bind `0.0.0.0:$PORT`.
 
 ---
 

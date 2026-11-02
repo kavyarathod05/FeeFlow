@@ -2,13 +2,23 @@
 
 **GitHub:** https://github.com/kavyarathod05/FeeFlow
 
+**Live production**
+
+| Layer | URL |
+|-------|-----|
+| Frontend | https://frontend-beta-two-a4xpte0563.vercel.app |
+| API | https://feeflow-api-rppm.onrender.com |
+| Health | https://feeflow-api-rppm.onrender.com/health |
+
 Prefer a **normal Render Web Service** (not Blueprint) when the account is on limited/free plans. Blueprint Postgres often forces a paid DB tier.
 
 ---
 
 ## Production — manual Render Web Service (recommended)
 
-### A. Free Postgres (Neon — recommended with free Render)
+### A. Free Postgres
+
+Use Render free Postgres (linked via private `DATABASE_URL`) or Neon:
 
 1. Create a free project at https://console.neon.tech  
 2. Copy the connection string (include SSL), e.g. `postgresql://...@.../neondb?sslmode=require`
@@ -25,7 +35,7 @@ Open: https://dashboard.render.com/select-repo?type=web
 | Branch | `main` |
 | Root Directory | `backend` |
 | Runtime | Node |
-| Build Command | `npm install && npx prisma generate && npm run build` |
+| Build Command | `npm install --include=dev && npx prisma generate && npm run build` |
 | Start Command | `npx prisma migrate deploy && node dist/server.js` |
 | Instance type | **Free** |
 | Health Check Path | `/health` |
@@ -38,9 +48,9 @@ Open: https://dashboard.render.com/select-repo?type=web
 | `JWT_SECRET` | long random string (16+ chars) |
 | `JWT_EXPIRES_IN` | `8h` |
 | `NODE_ENV` | `production` |
-| `CORS_ORIGIN` | your Vercel frontend URL (or `*` for demo) |
-| `APP_BASE_URL` | your Vercel frontend URL |
-| `API_BASE_URL` | `https://feeflow-api.onrender.com` (your real API URL) |
+| `CORS_ORIGIN` | `https://frontend-beta-two-a4xpte0563.vercel.app` |
+| `APP_BASE_URL` | `https://frontend-beta-two-a4xpte0563.vercel.app` |
+| `API_BASE_URL` | `https://feeflow-api-rppm.onrender.com` |
 | `OTP_DEMO_MODE` | `true` |
 | `OTP_DEMO_CODE` | `246810` |
 | `OTP_EXPIRY_MINUTES` | `5` |
@@ -48,21 +58,22 @@ Open: https://dashboard.render.com/select-repo?type=web
 | `PAYMENT_WEBHOOK_SECRET` | random string |
 | `GST_RATE` | `0.18` |
 | `TZ` | `Asia/Kolkata` |
+| `AUTO_SEED` | `true` (seeds empty DB on boot; free tier often blocks Shell) |
 
 Render sets `PORT` automatically. The app binds `0.0.0.0:$PORT`.
 
 ### D. After first successful deploy
 
-1. Open the service → **Shell**  
-2. Run: `npm run seed`  
-3. Check: `https://<your-service>.onrender.com/health`
+1. If Shell is available: `npm run seed` (otherwise rely on `AUTO_SEED=true`)  
+2. Check: `https://feeflow-api-rppm.onrender.com/health`  
+3. OTP smoke: `POST /api/auth/parent/request-otp` with `{"phone":"9876500587"}` → expect `demoOtp`
 
 ### E. Frontend (Vercel)
 
 1. Import repo → root `frontend`  
-2. Env: `VITE_API_BASE_URL=https://<your-service>.onrender.com`  
+2. Env: `VITE_API_BASE_URL=https://feeflow-api-rppm.onrender.com`  
 3. Build: `npm run build` · Output: `dist`  
-4. Claim/redeploy temporary frontend if needed
+4. Disable **Deployment Protection / Vercel Authentication** so the demo is public: `vercel project protection disable --sso`
 
 **Note:** Free Render web services sleep after ~15 minutes; first request can take 30–60s.
 

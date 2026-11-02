@@ -2,8 +2,8 @@
 
 **Repository:** https://github.com/kavyarathod05/FeeFlow
 
-**Temporary live frontend:** https://flying-oasis-xa3jswq.tmp.now (claim within ~60m)
-
+**Live frontend:** https://frontend-beta-two-a4xpte0563.vercel.app  
+**Live API:** https://feeflow-api-rppm.onrender.com · Health: `/health`
 
 Coaching institute fee tracking system and parent portal (MVP).
 
@@ -14,6 +14,7 @@ Multi-centre dues visibility, OTP parent portal, mock payment links with idempot
 - **Frontend:** React, Vite, TypeScript, Tailwind CSS, TanStack Query, Recharts
 - **Backend:** Node.js, Express, TypeScript, Prisma, PostgreSQL
 - **Auth:** Parent OTP (demo mode) · Accounts JWT
+- **Deploy:** Vercel (SPA) + Render free web service + Render Postgres
 
 ## Quick start
 
@@ -42,6 +43,7 @@ cd frontend && npm install && npm run dev
 
 ## Docs
 
+- [Technical Design Document](./docs/TDD.md)
 - [Architecture & assumptions](./docs/ARCHITECTURE.md)
 - [deployment.md](./deployment.md)
 

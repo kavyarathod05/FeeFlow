@@ -1,12 +1,11 @@
 # FeeFlow — Technical Design Document
 
 **GitHub URL:** https://github.com/kavyarathod05/FeeFlow  
-**Live app (temporary Vercel claim):** https://flying-oasis-xa3jswq.tmp.now  
-**Claim/keep frontend:** https://vercel.com/claim-deployment?code=4f48ab62-6b2b-4e85-9b00-f100ac61d8f0  
-**Backend deploy:** use Render Blueprint from repo `render.yaml` → https://dashboard.render.com/blueprint/new?repo=https://github.com/kavyarathod05/FeeFlow  
-API health (after backend deploy): `GET /health`
+**Live frontend:** https://frontend-beta-two-a4xpte0563.vercel.app  
+**Live API:** https://feeflow-api-rppm.onrender.com  
+**API health:** `GET https://feeflow-api-rppm.onrender.com/health`
 
-**ASSUMPTION:** Temporary frontend expires ~60 minutes unless claimed; point `VITE_API_BASE_URL` at the Render API URL after provisioning Postgres + seed.
+**ASSUMPTION:** Free Render web services sleep after ~15 minutes of inactivity; the first request after sleep can take 30–60s. OTP demo mode returns `demoOtp` in the API response for reviewers.
 
 ---
 
@@ -71,6 +70,11 @@ Deterministic weighted score from missed instalments, attendance drop, test decl
 
 REST under `/api/*` — auth, students/ledger, instalments/payment-link, payments (checkout/webhook), refunds, reminders, dashboard, risk, reconciliation, consent. Consistent `{ success, data|error }` envelope.
 
+Key auth paths:
+- `POST /api/auth/parent/request-otp`
+- `POST /api/auth/parent/verify-otp`
+- `POST /api/auth/accounts/login`
+
 ## 15. Security & privacy
 
 Zod validation, RBAC, hashed OTP/passwords, webhook HMAC, idempotency keys, audit logs, CORS, rate limits, no secrets in repo, synthetic data only. Consent is **demo** (ASSUMPTION A9).
@@ -87,7 +91,13 @@ Vitest: fee, refund, risk, reminder amount rules (18 passing). API smoke verifie
 
 ## 18. Deployment
 
-Frontend Vercel · Backend + Postgres Render · `0.0.0.0:$PORT` · see `deployment.md`.
+| Layer | Host | URL |
+|-------|------|-----|
+| Frontend | Vercel | https://frontend-beta-two-a4xpte0563.vercel.app |
+| API | Render (free web) | https://feeflow-api-rppm.onrender.com |
+| Database | Render Postgres (free) | private `DATABASE_URL` |
+
+See `deployment.md`. Server binds `0.0.0.0:$PORT`. Empty DB auto-seeds when `AUTO_SEED=true`.
 
 ## 19. Assumptions register
 
