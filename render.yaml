@@ -1,0 +1,44 @@
+# FeeFlow Render Blueprint
+# Requires a GitHub/GitLab remote. Frontend can stay on Vercel.
+services:
+  - type: web
+    name: feeflow-api
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npx prisma migrate deploy && node dist/server.js
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: feeflow-db
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 8h
+      - key: CORS_ORIGIN
+        sync: false
+      - key: APP_BASE_URL
+        sync: false
+      - key: API_BASE_URL
+        sync: false
+      - key: OTP_DEMO_MODE
+        value: "true"
+      - key: OTP_DEMO_CODE
+        generateValue: true
+      - key: PAYMENT_WEBHOOK_SECRET
+        generateValue: true
+      - key: GST_RATE
+        value: "0.18"
+      - key: TZ
+        value: Asia/Kolkata
+
+databases:
+  - name: feeflow-db
+    plan: free
+    databaseName: feeflow
+    user: feeflow

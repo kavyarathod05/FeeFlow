@@ -1,0 +1,159 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R 7 0 R] /Count 2 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>
+endobj
+4 0 obj
+<< /Length 3049 >>
+stream
+BT
+/F1 9 Tf
+50 800 Td
+11 TL
+(# FeeFlow ? Technical Design Document) Tj T*
+( ) Tj T*
+(**GitHub URL:** _\(add public repository URL here after push\)_  ) Tj T*
+(**Live app:** _\(add frontend URL after deploy\)_ · API health: `GET /health`) Tj T*
+( ) Tj T*
+(---) Tj T*
+( ) Tj T*
+(## 1. Executive summary) Tj T*
+( ) Tj T*
+(FeeFlow is an MVP SaaS for Company A \(Jaipur coaching\) that gives parents a clear dues view with pay links, ) Tj T*
+( ) Tj T*
+(## 2. Original business problem) Tj T*
+( ) Tj T*
+(Desktop fee software + Excel due dates + phone chasing. Estimated leakage: late follow-up \(~?62.4L never coll) Tj T*
+( ) Tj T*
+(## 3. Business impact calculations) Tj T*
+( ) Tj T*
+(From the brief \(preserved\): 2,600 × ?1.2L = ?31.2Cr billed; 2% uncollected ? ?62.4L; staff chasing ? ?16.8L;) Tj T*
+( ) Tj T*
+(## 4. Product scope) Tj T*
+( ) Tj T*
+(**In MVP:** fee ledger, parent OTP portal, mock pay + receipt, reminder cancel-on-pay, refund calculator, dues) Tj T*
+(**Roles:** Parent, Accounts Executive.  ) Tj T*
+(**Out of scope:** LMS, timetables, admissions CRM.) Tj T*
+( ) Tj T*
+(## 5. Architecture) Tj T*
+( ) Tj T*
+(React SPA ? Express domain modules ? PostgreSQL \(Prisma\). In-process cron for mock reminder dispatch. Mock p) Tj T*
+( ) Tj T*
+(## 6. Technology choices) Tj T*
+( ) Tj T*
+(Chosen for typed financial correctness \(Decimal\), fast MVP UI, Render/Vercel deployability, and strong testa) Tj T*
+( ) Tj T*
+(## 7. Database / ER) Tj T*
+( ) Tj T*
+(26+ relational models including FeePlan, Instalment, Payment, PaymentAllocation, Reminder, RefundPolicy/Reques) Tj T*
+( ) Tj T*
+(## 8. Authentication & permissions) Tj T*
+( ) Tj T*
+(- Parent: OTP \(hashed, expiry, rate limit\); JWT with `parentId`; student access via `ParentStudent` only.) Tj T*
+(- Accounts: email/password \(bcrypt\) + JWT; dashboard/refund/risk/recon restricted.) Tj T*
+(- Parent ? accounts endpoints ? 403.) Tj T*
+( ) Tj T*
+(## 9. Fee & instalment logic) Tj T*
+( ) Tj T*
+(`netFee = base ? discounts`. Outstanding from successful allocations only. Instalment sum must equal net fee o) Tj T*
+( ) Tj T*
+(## 10. Payment lifecycle) Tj T*
+( ) Tj T*
+(Link ? mock checkout session ? gateway result ? signed webhook ? transactional allocation ? receipt \(GST spli) Tj T*
+( ) Tj T*
+(## 11. Reminder automation) Tj T*
+( ) Tj T*
+(Configurable T?3 / T0 / T+3/+7/+15 \(ASSUMPTION A3\). HI/EN templates. Respect consent. Partial: amount = rema) Tj T*
+( ) Tj T*
+(## 12. Refund calculation & assumptions) Tj T*
+( ) Tj T*
+(**ASSUMPTION A1 \(labelled in UI\):**  ) Tj T*
+(`eligibleNetFee × remainingDays / totalDays`, capped at `paid ? alreadyRefunded`. Versioned policy + immutable) Tj T*
+( ) Tj T*
+(## 13. AI risk scoring) Tj T*
+( ) Tj T*
+(Deterministic weighted score from missed instalments, attendance drop, test decline \(ASSUMPTION A7\). Creates) Tj T*
+( ) Tj T*
+(## 14. API architecture) Tj T*
+( ) Tj T*
+(REST under `/api/*` ? auth, students/ledger, instalments/payment-link, payments \(checkout/webhook\), refunds,) Tj T*
+( ) Tj T*
+(## 15. Security & privacy) Tj T*
+( ) Tj T*
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 3 0 R >> >> >>
+endobj
+6 0 obj
+<< /Length 1928 >>
+stream
+BT
+/F1 9 Tf
+50 800 Td
+11 TL
+(Zod validation, RBAC, hashed OTP/passwords, webhook HMAC, idempotency keys, audit logs, CORS, rate limits, no ) Tj T*
+( ) Tj T*
+(## 16. UI / design decisions) Tj T*
+( ) Tj T*
+(Restrained navy/indigo, IBM Plex Sans + Source Serif 4 for amounts. Accounts: sidebar + tables. Parent: mobile) Tj T*
+( ) Tj T*
+(**Figma:** MCP unavailable during build ? design system tokens mirrored in CSS \(`frontend/src/index.css`\). F) Tj T*
+( ) Tj T*
+(## 17. Testing) Tj T*
+( ) Tj T*
+(Vitest: fee, refund, risk, reminder amount rules \(18 passing\). API smoke verified: pay ? receipt ? idempoten) Tj T*
+( ) Tj T*
+(## 18. Deployment) Tj T*
+( ) Tj T*
+(Frontend Vercel · Backend + Postgres Render · `0.0.0.0:$PORT` · see `deployment.md`.) Tj T*
+( ) Tj T*
+(## 19. Assumptions register) Tj T*
+( ) Tj T*
+(| ID | Type | Statement |) Tj T*
+(|----|------|-----------|) Tj T*
+(| A1 | Business-policy | Illustrative refund formula |) Tj T*
+(| A2 | Implementation | Eligible net = base ? discounts \(? optional non-refundable\) |) Tj T*
+(| A3 | Implementation | Reminder day offsets configurable defaults |) Tj T*
+(| A4 | Technical | Asia/Kolkata date policy |) Tj T*
+(| A5 | Implementation | Parent pays specific instalment \(not cross-instalment waterfall\) |) Tj T*
+(| A6 | Business-policy | 18% GST illustrative on receipts |) Tj T*
+(| A7 | Technical | Deterministic risk heuristic ? ML |) Tj T*
+(| A8 | Technical | OTP demo mode |) Tj T*
+(| A9 | Future/legal | Demo consent ? production DPDP |) Tj T*
+(| A10 | Data | Brief snapshots preserved alongside live recalculation |) Tj T*
+( ) Tj T*
+(## 20. Intentionally cut) Tj T*
+( ) Tj T*
+(Bulk CSV upload UI, Redis/BullMQ, real SMS/WhatsApp/Razorpay, multi-approver refund workflow, student self-log) Tj T*
+( ) Tj T*
+(## 21. Future roadmap) Tj T*
+( ) Tj T*
+(Real gateway + messaging, legally reviewed refund policy pack, verifiable parental consent, trained risk model) Tj T*
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 6 0 R /Resources << /Font << /F1 3 0 R >> >> >>
+endobj
+xref
+0 8
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000121 00000 n 
+0000000189 00000 n 
+0000003290 00000 n 
+0000003416 00000 n 
+0000005396 00000 n 
+trailer
+<< /Size 8 /Root 1 0 R >>
+startxref
+5522
+%%EOF

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>FeeFlow Design System</title>
+  <style>
+    :root {
+      --navy-950: #0f1a2e;
+      --navy-900: #1b2a4a;
+      --navy-700: #2f4b8a;
+      --navy-100: #e8eef8;
+      --ink: #152033;
+      --muted: #5b6b84;
+      --line: #e2e8f0;
+      --surface: #f7f9fc;
+      --success: #0f7b4c;
+      --warning: #b45309;
+      --danger: #b42318;
+    }
+    body { margin: 0; font-family: "IBM Plex Sans", sans-serif; background: var(--surface); color: var(--ink); }
+    .page { width: 1440px; padding: 48px; }
+    h1 { font-size: 32px; color: var(--navy-900); }
+    .swatches { display: flex; gap: 16px; margin: 24px 0 48px; }
+    .swatch { width: 120px; height: 80px; border-radius: 8px; border: 1px solid var(--line); padding: 8px; font-size: 12px; color: white; }
+    .screen { width: 1280px; min-height: 800px; background: white; border: 1px solid var(--line); border-radius: 12px; margin-bottom: 48px; display: grid; grid-template-columns: 240px 1fr; overflow: hidden; }
+    .side { background: var(--navy-900); color: white; padding: 24px; }
+    .main { padding: 32px; }
+    .kpi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .card { border: 1px solid var(--line); border-radius: 8px; padding: 16px; }
+    .mobile { width: 390px; min-height: 844px; background: linear-gradient(180deg,#eef2f8,#f7f9fc); border: 1px solid var(--line); border-radius: 24px; padding: 24px; margin-bottom: 48px; }
+    .amount { font-family: "Source Serif 4", Georgia, serif; font-size: 40px; color: var(--navy-900); }
+    .btn { background: var(--navy-900); color: white; border: 0; border-radius: 8px; padding: 14px 18px; width: 100%; font-weight: 600; }
+    .badge { display: inline-block; background: #fef2f2; color: var(--danger); padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>FeeFlow Design System</h1>
+    <p>Restrained navy/indigo · IBM Plex Sans · Source Serif 4 for amounts · white surfaces · subtle borders</p>
+    <div class="swatches">
+      <div class="swatch" style="background:var(--navy-900)">navy-900</div>
+      <div class="swatch" style="background:var(--navy-700)">navy-700</div>
+      <div class="swatch" style="background:var(--success)">success</div>
+      <div class="swatch" style="background:var(--warning)">warning</div>
+      <div class="swatch" style="background:var(--danger)">danger</div>
+      <div class="swatch" style="background:white;color:var(--ink);border-color:var(--line)">surface</div>
+    </div>
+
+    <h2>1. Accounts dashboard</h2>
+    <div class="screen">
+      <div class="side"><strong>FeeFlow</strong><div style="opacity:.7;font-size:12px;margin-top:4px">Accounts workspace</div>
+        <div style="margin-top:24px;font-size:14px;line-height:2">Dashboard<br/>Fee ledgers<br/>Reminders<br/>Refunds<br/>Risk tasks<br/>Reconciliation</div>
+      </div>
+      <div class="main">
+        <h3 style="margin-top:0">Dues dashboard</h3>
+        <div class="kpi">
+          <div class="card"><div style="font-size:11px;color:var(--muted)">BILLED</div><div class="amount" style="font-size:24px">₹5,90,000</div></div>
+          <div class="card"><div style="font-size:11px;color:var(--muted)">COLLECTED</div><div class="amount" style="font-size:24px">₹1,82,500</div></div>
+          <div class="card"><div style="font-size:11px;color:var(--muted)">OUTSTANDING</div><div class="amount" style="font-size:24px">₹4,07,500</div></div>
+          <div class="card"><div style="font-size:11px;color:var(--muted)">OVERDUE</div><div class="amount" style="font-size:24px;color:var(--danger)">₹70,000</div></div>
+        </div>
+      </div>
+    </div>
+
+    <h2>3. Parent portal (mobile)</h2>
+    <div class="mobile">
+      <div style="display:flex;justify-content:space-between;align-items:center"><strong>FeeFlow</strong><span>हिन्दी</span></div>
+      <div style="margin-top:24px;background:white;border:1px solid var(--line);border-radius:16px;padding:20px">
+        <div style="color:var(--muted);font-size:14px">Ishita Sharma · STU-0587</div>
+        <div style="margin-top:16px;font-size:12px;color:var(--muted);text-transform:uppercase">बकाया राशि</div>
+        <div class="amount">₹1,05,000</div>
+        <div style="margin-top:12px;font-size:14px;color:var(--muted)">अगली देय तिथि: <strong style="color:var(--ink)">2026-10-10</strong> <span class="badge">23d overdue</span></div>
+        <button class="btn" style="margin-top:20px">अभी भुगतान करें · ₹15,000</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
