@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>FeeFlow — 8 Core Screens</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet" />
+<style>
+  :root{--navy:#1b2a4a;--accent:#2f4b8a;--ink:#152033;--muted:#5b6b84;--line:#e2e8f0;--surface:#f7f9fc;--danger:#b42318;--ok:#0f7b4c;--warn:#b45309}
+  *{box-sizing:border-box} body{margin:0;font-family:"IBM Plex Sans",sans-serif;background:#dfe6f1;color:var(--ink)}
+  h1{padding:40px 40px 8px;color:var(--navy)} .sub{padding:0 40px 32px;color:var(--muted)}
+  .row{display:flex;flex-wrap:wrap;gap:32px;padding:0 40px 48px;align-items:flex-start}
+  .desk{width:1100px;height:700px;background:#fff;border-radius:12px;border:1px solid #c9d3e3;display:grid;grid-template-columns:220px 1fr;overflow:hidden;box-shadow:0 8px 30px rgba(27,42,74,.08)}
+  .side{background:var(--navy);color:#fff;padding:20px} .side nav div{padding:8px 10px;border-radius:6px;margin:4px 0;font-size:13px;opacity:.85}
+  .side nav div.active{background:rgba(255,255,255,.15);opacity:1}
+  .main{padding:24px;background:var(--surface)} .title{font-size:22px;font-weight:600;color:var(--navy);margin:0 0 16px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px} .card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px}
+  .card .l{font-size:10px;letter-spacing:.06em;color:var(--muted);text-transform:uppercase} .card .v{font-family:"Source Serif 4",serif;font-size:22px;margin-top:6px}
+  table{width:100%;border-collapse:collapse;font-size:12px;background:#fff;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-top:14px}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left} th{background:#fff;color:var(--muted);font-weight:500}
+  .badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:11px} .bad{background:#fef2f2;color:var(--danger)} .ok{background:#ecfdf3;color:var(--ok)} .warn{background:#fffbeb;color:var(--warn)}
+  .phone{width:360px;height:740px;background:linear-gradient(180deg,#eef2f8,#f7f9fc);border-radius:28px;border:1px solid #c9d3e3;padding:22px;box-shadow:0 8px 30px rgba(27,42,74,.08)}
+  .hero{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:18px}
+  .amt{font-family:"Source Serif 4",serif;font-size:36px;color:var(--navy)}
+  .btn{display:block;width:100%;background:var(--navy);color:#fff;border:0;border-radius:8px;padding:14px;font-weight:600;margin-top:16px}
+  .label{font-size:12px;font-weight:600;color:var(--navy);margin:28px 40px 8px}
+</style>
+</head>
+<body>
+  <h1>FeeFlow — Core screens</h1>
+  <p class="sub">Design system: navy/indigo · IBM Plex Sans · Source Serif 4 amounts · white surfaces · status accents only. Figma MCP was unavailable; this is the source design for import.</p>
+
+  <div class="label">1. Accounts dashboard</div>
+  <div class="row"><div class="desk"><div class="side"><strong>FeeFlow</strong><div style="opacity:.7;font-size:11px;margin:4px 0 16px">Accounts workspace</div><nav><div class="active">Dashboard</div><div>Fee ledgers</div><div>Reminders</div><div>Refunds</div><div>Risk tasks</div><div>Reconciliation</div></nav></div>
+  <div class="main"><p class="title">Dues dashboard</p><div class="kpis"><div class="card"><div class="l">Billed</div><div class="v">₹5,90,000</div></div><div class="card"><div class="l">Collected</div><div class="v">₹1,82,500</div></div><div class="card"><div class="l">Outstanding</div><div class="v">₹4,07,500</div></div><div class="card"><div class="l">Overdue</div><div class="v" style="color:var(--danger)">₹70,000</div></div></div>
+  <table><tr><th>Centre</th><th>Outstanding</th><th>Overdue</th></tr><tr><td>Malviya Nagar</td><td>₹1,20,000</td><td>₹27,500</td></tr><tr><td>Vaishali Nagar</td><td>₹1,05,000</td><td>₹15,000</td></tr></table></div></div></div>
+
+  <div class="label">2. Student fee ledger · 3. Parent portal · 4. Payment</div>
+  <div class="row">
+    <div class="desk" style="height:640px"><div class="side"><strong>FeeFlow</strong><nav style="margin-top:20px"><div>Dashboard</div><div class="active">Fee ledgers</div><div>Reminders</div></nav></div>
+      <div class="main"><p class="title">Ishita Sharma <span style="font-size:13px;color:var(--muted);font-weight:400">STU-0587 · JEE 2027 Evening</span></p>
+        <div class="kpis"><div class="card"><div class="l">Net fee</div><div class="v">₹1,20,000</div></div><div class="card"><div class="l">Outstanding</div><div class="v">₹1,05,000</div></div><div class="card"><div class="l">Overdue</div><div class="v" style="color:var(--danger)">₹15,000</div></div><div class="card"><div class="l">Risk</div><div class="v" style="font-size:16px"><span class="badge bad">HIGH</span></div></div></div>
+        <table><tr><th>#</th><th>Due</th><th>Amount</th><th>Paid</th><th>Status</th></tr>
+          <tr><td>1</td><td>2026-10-10</td><td>₹30,000</td><td>₹15,000</td><td><span class="badge bad">OVERDUE</span></td></tr>
+          <tr><td>2</td><td>2026-12-10</td><td>₹30,000</td><td>₹0</td><td><span class="badge warn">UPCOMING</span></td></tr>
+        </table>
+      </div></div>
+    <div class="phone"><div style="display:flex;justify-content:space-between"><strong>FeeFlow</strong><span>हिन्दी</span></div>
+      <div class="hero"><div style="color:var(--muted);font-size:13px">Ishita Sharma · STU-0587</div><div style="margin-top:14px;font-size:11px;color:var(--muted);text-transform:uppercase">बकाया राशि</div><div class="amt">₹1,05,000</div><div style="margin-top:10px;font-size:13px;color:var(--muted)">अगली देय तिथि: <b style="color:var(--ink)">2026-10-10</b> <span class="badge bad">23d</span></div><button class="btn">अभी भुगतान करें · ₹15,000</button></div>
+      <div style="margin-top:18px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:13px"><b>अतिदेय</b><div style="margin-top:8px;display:flex;justify-content:space-between"><span>#1 · 2026-10-10</span><span>₹15,000</span></div></div>
+    </div>
+    <div class="phone" style="height:560px"><div style="color:var(--accent);font-size:13px;font-weight:600">FeeFlow · Test mode</div><h3 style="margin:8px 0 12px;color:var(--navy)">Instalment payment</h3>
+      <div class="hero"><div>Amount <b>₹15,000</b></div><div style="color:var(--muted);font-size:12px;margin-top:4px">Ref MOCK-…</div><button class="btn">Pay successfully</button><button class="btn" style="background:#fff;color:var(--navy);border:1px solid var(--line);margin-top:8px">Fail</button></div>
+    </div>
+  </div>
+
+  <div class="label">5. Reminders · 6. Refunds · 7. Risk · 8. Reconciliation</div>
+  <div class="row">
+    <div class="desk" style="width:520px;height:420px;grid-template-columns:1fr"><div class="main"><p class="title">Reminder centre</p>
+      <table><tr><th>Student</th><th>Stage</th><th>Status</th></tr><tr><td>Ishita</td><td>AFTER_DUE</td><td><span class="badge ok">SENT</span></td></tr><tr><td>Mohit</td><td>BEFORE_DUE</td><td><span class="badge warn">SCHEDULED</span></td></tr></table>
+      <p style="font-size:12px;color:var(--muted);margin-top:10px">Mock SMS only · cancelled on successful payment</p></div></div>
+    <div class="desk" style="width:520px;height:420px;grid-template-columns:1fr"><div class="main"><p class="title">Refund calculator</p>
+      <div class="card" style="border-color:#fcd34d;background:#fffbeb;font-size:12px;margin-bottom:10px"><b>Illustrative policy A1</b> — not client-approved written policy. eligibleNet × remaining/total, capped at paid.</div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0;border-bottom:1px solid var(--line)"><span>Proposed refund</span><b class="amt" style="font-size:22px">₹48,000</b></div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;padding:6px 0"><span>10-day deadline</span><span>2026-11-25</span></div>
+    </div></div>
+    <div class="desk" style="width:520px;height:420px;grid-template-columns:1fr"><div class="main"><p class="title">Risk / counsellor tasks</p>
+      <div class="card"><div style="display:flex;gap:8px;align-items:center"><b>Ishita Sharma</b><span class="badge bad">HIGH</span><span class="badge warn">OPEN</span></div><p style="font-size:12px;color:var(--muted);margin:8px 0 0">Missed instalments · attendance 90%→55% · tests 72%→48%. Decision support only — no fee or parent message.</p></div>
+    </div></div>
+    <div class="desk" style="width:520px;height:420px;grid-template-columns:1fr"><div class="main"><p class="title">Reconciliation</p>
+      <table><tr><th>Ref</th><th>Amount</th><th>Recon</th></tr><tr><td>MOCK-UNMATCHED-001</td><td>₹5,000</td><td><span class="badge bad">UNMATCHED</span></td></tr><tr><td>MOCK-SEED-ISHITA</td><td>₹15,000</td><td><span class="badge ok">MATCHED</span></td></tr></table>
+      <p style="font-size:12px;color:var(--muted);margin-top:10px">Tally CSV export · never auto-allocate ambiguous payments</p>
+    </div></div>
+  </div>
+</body>
+</html>
